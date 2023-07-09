@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package simplequeuepb;
+
+option go_package = "/pb";
+
+message Identify { string magic = 1; }
+
+message Pub { string topic = 1; }
+
+message Sub {
+  string topic = 1;
+  string channel = 2;
+}
+
+message Msg {
+  string id = 1;
+  string body = 2;
+}
