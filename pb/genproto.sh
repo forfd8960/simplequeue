@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+protoc --proto_path=$GOPATH/src:$GOPATH/src/github.com/gogo/protobuf/gogoproto:. -I=. -I=$GOPATH/src -I=$GOPATH/src/github.com/gogo/protobuf/protobuf --gogofast_out=plugins=grpc:. simplequeue.proto
