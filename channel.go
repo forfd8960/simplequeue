@@ -11,6 +11,6 @@ type Channel struct {
 	Name          string
 	MemoryMsgChan chan *pb.QueueMsg
 
-	queueServer *QueueServer
-	clients     map[int64]Consumer
+	qs      *QueueServer
+	clients map[int64]Consumer
 }
