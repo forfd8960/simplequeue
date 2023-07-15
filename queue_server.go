@@ -32,3 +32,21 @@ func NewQueueServer(opts *Options) (*QueueServer, error) {
 
 	return qs, nil
 }
+
+func (qs *QueueServer) Main() error {
+	exitCh := make(chan error)
+	var once sync.Once
+
+	exitFunc := func(err error) {
+		once.Do(func() {
+			exitCh <- err
+		})
+	}
+
+	qs.wg.Wrap(func() {
+		exitFunc(runServer(qs.tcpListener, qs.connHandler))
+	})
+
+	err := <-exitCh
+	return err
+}
