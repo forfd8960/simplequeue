@@ -4,11 +4,26 @@ package simplequeue;
 
 option go_package = "pb";
 
+service QueueService {
+    rpc PubMessage(PubMessageRequest) returns (PubMessageResponse) {}
+    rpc SubQueue(SubQueueRequest) returns (stream QueueMsg) {}
+}
+
 message Identify { string magic = 1; }
 
+message PubMessageRequest {
+  Pub pub = 1;
+}
+
+message PubMessageResponse {}
+
+message SubQueueRequest {
+  Sub sub = 1;
+}
+
 message Pub {
-  string topic = 1;
-  string message = 2;
+   string topic = 1;
+   bytes msg = 2;
 }
 
 message Sub {
