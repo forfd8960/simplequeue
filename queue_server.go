@@ -2,9 +2,11 @@ package simplequeue
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net"
 	"sync"
+	"sync/atomic"
 
 	"github.com/forfd8960/simplequeue/pb"
 	"google.golang.org/grpc/codes"
@@ -22,6 +24,7 @@ var (
 
 type QueueServer struct {
 	mu          sync.RWMutex
+	clientIDSeq int64
 	topicMap    map[string]*Topic
 	tcpListener net.Listener
 	connHandler *connHandler
@@ -97,9 +100,44 @@ func (qs *QueueServer) SubEvent(ctx context.Context, req *pb.SubEventRequest) (*
 		return nil, errInvalidArgument("empty channel")
 	}
 
-	return &pb.SubEventResponse{}, nil
+	t := qs.GetTopic(topic)
+	ch := t.GetChannel(channel)
+
+	clientID := atomic.AddInt64(&qs.clientIDSeq, 1)
+	client := NewClient(clientID, qs)
+	if err := ch.AddClient(clientID, client); err != nil {
+		return nil, err
+	}
+
+	return &pb.SubEventResponse{
+		ClientId: fmt.Sprintf("%d", clientID),
+	}, nil
 }
 
 func (qs *QueueServer) ConsumeMessage(req *pb.ConsumeMessageRequest, srv pb.QueueService_ConsumeMessageServer) error {
+	if req == nil || req.ClientId == "" {
+		return errInvalidArgument("invalid request/clientID: %v", req)
+	}
 	return nil
+}
+
+func (qs *QueueServer) GetTopic(topicName string) *Topic {
+	qs.mu.RLock()
+	t, ok := qs.topicMap[topicName]
+	if ok {
+		return t
+	}
+	qs.mu.RUnlock()
+
+	qs.mu.Lock()
+	t, ok = qs.topicMap[topicName]
+	if ok {
+		return t
+	}
+
+	t = NewTopic(topicName, qs)
+	qs.topicMap[topicName] = t
+	qs.mu.Unlock()
+
+	return t
 }

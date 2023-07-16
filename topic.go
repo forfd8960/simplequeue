@@ -33,6 +33,29 @@ func NewTopic(topicName string, qs *QueueServer) *Topic {
 	return t
 }
 
+func (t *Topic) GetChannel(chanName string) *Channel {
+	t.mu.RLock()
+	channel, isNew := t.getOrCreateChannel(chanName)
+	t.mu.RUnlock()
+
+	//todo: update topic chan
+	if isNew {
+		log.Println("created new channel: ", chanName)
+	}
+	return channel
+}
+
+func (t *Topic) getOrCreateChannel(chanName string) (*Channel, bool) {
+	ch, ok := t.ChannelMap[chanName]
+	if ok {
+		return ch, false
+	}
+
+	ch = NewChannel(t.Name, chanName, t.qs)
+	t.ChannelMap[chanName] = ch
+	return ch, true
+}
+
 func (t *Topic) messagePump() {
 	var msg *pb.QueueMsg
 	var chans []*Channel
