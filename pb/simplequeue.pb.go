@@ -159,25 +159,25 @@ func (m *PubMessageResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_PubMessageResponse proto.InternalMessageInfo
 
-type SubQueueRequest struct {
+type SubEventRequest struct {
 	Sub                  *Sub     `protobuf:"bytes,1,opt,name=sub,proto3" json:"sub,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SubQueueRequest) Reset()         { *m = SubQueueRequest{} }
-func (m *SubQueueRequest) String() string { return proto.CompactTextString(m) }
-func (*SubQueueRequest) ProtoMessage()    {}
-func (*SubQueueRequest) Descriptor() ([]byte, []int) {
+func (m *SubEventRequest) Reset()         { *m = SubEventRequest{} }
+func (m *SubEventRequest) String() string { return proto.CompactTextString(m) }
+func (*SubEventRequest) ProtoMessage()    {}
+func (*SubEventRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f4b44d6257b627d3, []int{3}
 }
-func (m *SubQueueRequest) XXX_Unmarshal(b []byte) error {
+func (m *SubEventRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *SubQueueRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *SubEventRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_SubQueueRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_SubEventRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -187,23 +187,117 @@ func (m *SubQueueRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 		return b[:n], nil
 	}
 }
-func (m *SubQueueRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SubQueueRequest.Merge(m, src)
+func (m *SubEventRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SubEventRequest.Merge(m, src)
 }
-func (m *SubQueueRequest) XXX_Size() int {
+func (m *SubEventRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *SubQueueRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_SubQueueRequest.DiscardUnknown(m)
+func (m *SubEventRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_SubEventRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_SubQueueRequest proto.InternalMessageInfo
+var xxx_messageInfo_SubEventRequest proto.InternalMessageInfo
 
-func (m *SubQueueRequest) GetSub() *Sub {
+func (m *SubEventRequest) GetSub() *Sub {
 	if m != nil {
 		return m.Sub
 	}
 	return nil
+}
+
+type SubEventResponse struct {
+	ClientId             string   `protobuf:"bytes,1,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *SubEventResponse) Reset()         { *m = SubEventResponse{} }
+func (m *SubEventResponse) String() string { return proto.CompactTextString(m) }
+func (*SubEventResponse) ProtoMessage()    {}
+func (*SubEventResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f4b44d6257b627d3, []int{4}
+}
+func (m *SubEventResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *SubEventResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_SubEventResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *SubEventResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SubEventResponse.Merge(m, src)
+}
+func (m *SubEventResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *SubEventResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_SubEventResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SubEventResponse proto.InternalMessageInfo
+
+func (m *SubEventResponse) GetClientId() string {
+	if m != nil {
+		return m.ClientId
+	}
+	return ""
+}
+
+type ConsumeMessageRequest struct {
+	ClientId             string   `protobuf:"bytes,1,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ConsumeMessageRequest) Reset()         { *m = ConsumeMessageRequest{} }
+func (m *ConsumeMessageRequest) String() string { return proto.CompactTextString(m) }
+func (*ConsumeMessageRequest) ProtoMessage()    {}
+func (*ConsumeMessageRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f4b44d6257b627d3, []int{5}
+}
+func (m *ConsumeMessageRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ConsumeMessageRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ConsumeMessageRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ConsumeMessageRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ConsumeMessageRequest.Merge(m, src)
+}
+func (m *ConsumeMessageRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *ConsumeMessageRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ConsumeMessageRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ConsumeMessageRequest proto.InternalMessageInfo
+
+func (m *ConsumeMessageRequest) GetClientId() string {
+	if m != nil {
+		return m.ClientId
+	}
+	return ""
 }
 
 type Pub struct {
@@ -218,7 +312,7 @@ func (m *Pub) Reset()         { *m = Pub{} }
 func (m *Pub) String() string { return proto.CompactTextString(m) }
 func (*Pub) ProtoMessage()    {}
 func (*Pub) Descriptor() ([]byte, []int) {
-	return fileDescriptor_f4b44d6257b627d3, []int{4}
+	return fileDescriptor_f4b44d6257b627d3, []int{6}
 }
 func (m *Pub) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -273,7 +367,7 @@ func (m *Sub) Reset()         { *m = Sub{} }
 func (m *Sub) String() string { return proto.CompactTextString(m) }
 func (*Sub) ProtoMessage()    {}
 func (*Sub) Descriptor() ([]byte, []int) {
-	return fileDescriptor_f4b44d6257b627d3, []int{5}
+	return fileDescriptor_f4b44d6257b627d3, []int{7}
 }
 func (m *Sub) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -330,7 +424,7 @@ func (m *QueueMsg) Reset()         { *m = QueueMsg{} }
 func (m *QueueMsg) String() string { return proto.CompactTextString(m) }
 func (*QueueMsg) ProtoMessage()    {}
 func (*QueueMsg) Descriptor() ([]byte, []int) {
-	return fileDescriptor_f4b44d6257b627d3, []int{6}
+	return fileDescriptor_f4b44d6257b627d3, []int{8}
 }
 func (m *QueueMsg) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -391,7 +485,9 @@ func init() {
 	proto.RegisterType((*Identify)(nil), "simplequeue.Identify")
 	proto.RegisterType((*PubMessageRequest)(nil), "simplequeue.PubMessageRequest")
 	proto.RegisterType((*PubMessageResponse)(nil), "simplequeue.PubMessageResponse")
-	proto.RegisterType((*SubQueueRequest)(nil), "simplequeue.SubQueueRequest")
+	proto.RegisterType((*SubEventRequest)(nil), "simplequeue.SubEventRequest")
+	proto.RegisterType((*SubEventResponse)(nil), "simplequeue.SubEventResponse")
+	proto.RegisterType((*ConsumeMessageRequest)(nil), "simplequeue.ConsumeMessageRequest")
 	proto.RegisterType((*Pub)(nil), "simplequeue.Pub")
 	proto.RegisterType((*Sub)(nil), "simplequeue.Sub")
 	proto.RegisterType((*QueueMsg)(nil), "simplequeue.QueueMsg")
@@ -400,29 +496,33 @@ func init() {
 func init() { proto.RegisterFile("simplequeue.proto", fileDescriptor_f4b44d6257b627d3) }
 
 var fileDescriptor_f4b44d6257b627d3 = []byte{
-	// 346 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x92, 0xc1, 0x6a, 0xea, 0x40,
-	0x14, 0x86, 0x9d, 0x44, 0xef, 0x8d, 0x47, 0xb9, 0x57, 0x0f, 0x16, 0x82, 0x48, 0x1a, 0x66, 0x95,
-	0x4d, 0xa5, 0x58, 0xa4, 0xfb, 0x76, 0xd5, 0x85, 0xd4, 0x26, 0xbb, 0xee, 0x32, 0x66, 0x1a, 0x03,
-	0x26, 0x99, 0x3a, 0x33, 0x05, 0xdf, 0xa7, 0x0f, 0xd3, 0x65, 0x1f, 0xa1, 0xf8, 0x24, 0x25, 0x53,
-	0xad, 0x51, 0x70, 0x37, 0xff, 0x39, 0xe7, 0x3f, 0xe7, 0xe7, 0x63, 0xa0, 0x2f, 0xb3, 0x5c, 0xac,
-	0xf8, 0xab, 0xe6, 0x9a, 0x8f, 0xc5, 0xba, 0x54, 0x25, 0x76, 0x6a, 0x25, 0xea, 0x83, 0xf3, 0x90,
-	0xf0, 0x42, 0x65, 0x2f, 0x1b, 0x1c, 0x40, 0x2b, 0x8f, 0xd3, 0x6c, 0xe1, 0x12, 0x9f, 0x04, 0xed,
-	0xf0, 0x47, 0xd0, 0x5b, 0xe8, 0xcf, 0x35, 0x9b, 0x71, 0x29, 0xe3, 0x94, 0x87, 0x95, 0x4d, 0x2a,
-	0xa4, 0x60, 0x0b, 0xcd, 0xcc, 0x60, 0x67, 0xd2, 0x1b, 0xd7, 0x8f, 0xcc, 0x35, 0x0b, 0xab, 0x26,
-	0x1d, 0x00, 0xd6, 0x8d, 0x52, 0x94, 0x85, 0xe4, 0x74, 0x0a, 0xff, 0x23, 0xcd, 0x9e, 0xaa, 0xd1,
-	0xda, 0x32, 0x79, 0x66, 0x59, 0x54, 0x2d, 0x93, 0x9a, 0xd1, 0x2b, 0xb0, 0xe7, 0x9a, 0x55, 0x11,
-	0x55, 0x29, 0x0e, 0x11, 0x8d, 0xc0, 0x1e, 0xd8, 0xb9, 0x4c, 0x5d, 0xcb, 0x27, 0x41, 0x37, 0xac,
-	0x9e, 0x74, 0x0a, 0x76, 0x74, 0x76, 0xdc, 0x85, 0xbf, 0x8b, 0x65, 0x5c, 0x14, 0x7c, 0x65, 0x2c,
-	0xed, 0x70, 0x2f, 0xe9, 0x12, 0x1c, 0x93, 0x6c, 0x26, 0x53, 0xfc, 0x07, 0x56, 0x96, 0xec, 0x8c,
-	0x56, 0x96, 0x20, 0x42, 0x93, 0x95, 0xc9, 0x66, 0x67, 0x31, 0x6f, 0x1c, 0x41, 0x5b, 0x65, 0x39,
-	0x97, 0x2a, 0xce, 0x85, 0x6b, 0xfb, 0x24, 0xb0, 0xc3, 0x43, 0x01, 0x87, 0xe0, 0xc4, 0x4a, 0xf1,
-	0x5c, 0x28, 0xe9, 0x36, 0x7d, 0x12, 0xb4, 0xc2, 0x5f, 0x3d, 0x79, 0x27, 0xd0, 0x35, 0xa7, 0x22,
-	0xbe, 0x7e, 0xcb, 0x16, 0x1c, 0x1f, 0x01, 0x0e, 0xb4, 0xd0, 0x3b, 0x45, 0x7a, 0xcc, 0x7f, 0x78,
-	0x79, 0xb6, 0xbf, 0xc3, 0xdc, 0xc0, 0x7b, 0x70, 0xf6, 0xa0, 0x71, 0x74, 0x0a, 0xb5, 0xce, 0x7f,
-	0x78, 0x71, 0xd4, 0xdd, 0x03, 0xa0, 0x8d, 0x6b, 0x72, 0xd7, 0xfb, 0xd8, 0x7a, 0xe4, 0x73, 0xeb,
-	0x91, 0xaf, 0xad, 0x47, 0x9e, 0x2d, 0xc1, 0xd8, 0x1f, 0xf3, 0x89, 0x6e, 0xbe, 0x03, 0x00, 0x00,
-	0xff, 0xff, 0xa4, 0x8a, 0x37, 0x99, 0x59, 0x02, 0x00, 0x00,
+	// 403 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x93, 0xcd, 0x6e, 0x95, 0x40,
+	0x14, 0xc7, 0x3b, 0xd0, 0x2a, 0x9c, 0x36, 0x95, 0x9e, 0xb4, 0x09, 0xc1, 0x8a, 0x64, 0x56, 0x6c,
+	0xac, 0xa6, 0xda, 0xb8, 0xd7, 0xb8, 0xb8, 0x8b, 0xa6, 0x57, 0xd8, 0xb9, 0x31, 0x0c, 0x8c, 0x74,
+	0x92, 0x0b, 0x8c, 0x9d, 0x99, 0x26, 0xf7, 0x0d, 0x5d, 0xfa, 0x08, 0xe6, 0xbe, 0x86, 0x1b, 0x03,
+	0xf7, 0x03, 0xb8, 0x91, 0xee, 0xe6, 0x7c, 0xfc, 0xff, 0xe7, 0x70, 0x7e, 0x01, 0xce, 0x94, 0xa8,
+	0xe4, 0x82, 0xff, 0x34, 0xdc, 0xf0, 0x2b, 0xf9, 0xd0, 0xe8, 0x06, 0x8f, 0x07, 0x29, 0x1a, 0x81,
+	0x33, 0x2b, 0x78, 0xad, 0xc5, 0x8f, 0x25, 0x9e, 0xc3, 0x51, 0x95, 0x95, 0x22, 0xf7, 0x49, 0x44,
+	0x62, 0x37, 0x59, 0x07, 0xf4, 0x23, 0x9c, 0xcd, 0x0d, 0xbb, 0xe5, 0x4a, 0x65, 0x25, 0x4f, 0x5a,
+	0x99, 0xd2, 0x48, 0xc1, 0x96, 0x86, 0x75, 0x8d, 0xc7, 0xd7, 0xde, 0xd5, 0x70, 0xc8, 0xdc, 0xb0,
+	0xa4, 0x2d, 0xd2, 0x73, 0xc0, 0xa1, 0x50, 0xc9, 0xa6, 0x56, 0x9c, 0xde, 0xc0, 0x8b, 0xd4, 0xb0,
+	0x2f, 0x8f, 0xbc, 0xd6, 0x03, 0x33, 0x35, 0x61, 0x96, 0xb6, 0x66, 0xca, 0x30, 0xfa, 0x16, 0xbc,
+	0x5e, 0xb6, 0xb6, 0xc2, 0x97, 0xe0, 0xe6, 0x0b, 0xc1, 0x6b, 0xfd, 0x5d, 0x14, 0x9b, 0x9d, 0x9d,
+	0x75, 0x62, 0x56, 0xd0, 0x0f, 0x70, 0xf1, 0xb9, 0xa9, 0x95, 0xa9, 0xf8, 0xde, 0xea, 0x4f, 0xaa,
+	0xde, 0x80, 0x3d, 0x37, 0xac, 0xbd, 0x84, 0x6e, 0x64, 0x7f, 0x89, 0x2e, 0x40, 0x0f, 0xec, 0x4a,
+	0x95, 0xbe, 0x15, 0x91, 0xf8, 0x24, 0x69, 0x9f, 0xf4, 0x06, 0xec, 0x74, 0xb2, 0xdd, 0x87, 0xe7,
+	0xf9, 0x7d, 0x56, 0xd7, 0x7c, 0xd1, 0x49, 0xdc, 0x64, 0x1b, 0xd2, 0x7b, 0x70, 0xbe, 0xb6, 0x9f,
+	0x77, 0xab, 0x4a, 0x3c, 0x05, 0x6b, 0xb7, 0x87, 0x25, 0x0a, 0x44, 0x38, 0x64, 0x4d, 0xb1, 0xdc,
+	0x48, 0xba, 0x37, 0x5e, 0x82, 0xab, 0x45, 0xc5, 0x95, 0xce, 0x2a, 0xe9, 0xdb, 0x11, 0x89, 0xed,
+	0xa4, 0x4f, 0x60, 0x00, 0x4e, 0xa6, 0x35, 0xaf, 0xa4, 0x56, 0xfe, 0x61, 0x44, 0xe2, 0xa3, 0x64,
+	0x17, 0x5f, 0xff, 0x25, 0x70, 0xd2, 0x8d, 0x4a, 0xf9, 0xc3, 0xa3, 0xc8, 0x39, 0xde, 0x01, 0xf4,
+	0x50, 0x30, 0xdc, 0x27, 0x37, 0xbe, 0x55, 0xf0, 0x7a, 0xb2, 0xbe, 0xa1, 0x79, 0x80, 0x33, 0x70,
+	0xb6, 0x60, 0xf0, 0x72, 0x9f, 0xdd, 0x10, 0x73, 0xf0, 0x6a, 0xa2, 0xba, 0xb3, 0xba, 0x83, 0xd3,
+	0x31, 0x32, 0xa4, 0x23, 0xc9, 0x7f, 0x79, 0x06, 0x17, 0xa3, 0x9e, 0xed, 0x5d, 0xe9, 0xc1, 0x3b,
+	0xf2, 0xc9, 0xfb, 0xb5, 0x0a, 0xc9, 0xef, 0x55, 0x48, 0xfe, 0xac, 0x42, 0xf2, 0xcd, 0x92, 0x8c,
+	0x3d, 0xeb, 0x7e, 0x81, 0xf7, 0xff, 0x02, 0x00, 0x00, 0xff, 0xff, 0x59, 0xc4, 0x1e, 0xb1, 0x17,
+	0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -438,7 +538,8 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueueServiceClient interface {
 	PubMessage(ctx context.Context, in *PubMessageRequest, opts ...grpc.CallOption) (*PubMessageResponse, error)
-	SubQueue(ctx context.Context, in *SubQueueRequest, opts ...grpc.CallOption) (QueueService_SubQueueClient, error)
+	SubEvent(ctx context.Context, in *SubEventRequest, opts ...grpc.CallOption) (*SubEventResponse, error)
+	ConsumeMessage(ctx context.Context, in *ConsumeMessageRequest, opts ...grpc.CallOption) (QueueService_ConsumeMessageClient, error)
 }
 
 type queueServiceClient struct {
@@ -458,12 +559,21 @@ func (c *queueServiceClient) PubMessage(ctx context.Context, in *PubMessageReque
 	return out, nil
 }
 
-func (c *queueServiceClient) SubQueue(ctx context.Context, in *SubQueueRequest, opts ...grpc.CallOption) (QueueService_SubQueueClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_QueueService_serviceDesc.Streams[0], "/simplequeue.QueueService/SubQueue", opts...)
+func (c *queueServiceClient) SubEvent(ctx context.Context, in *SubEventRequest, opts ...grpc.CallOption) (*SubEventResponse, error) {
+	out := new(SubEventResponse)
+	err := c.cc.Invoke(ctx, "/simplequeue.QueueService/SubEvent", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &queueServiceSubQueueClient{stream}
+	return out, nil
+}
+
+func (c *queueServiceClient) ConsumeMessage(ctx context.Context, in *ConsumeMessageRequest, opts ...grpc.CallOption) (QueueService_ConsumeMessageClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_QueueService_serviceDesc.Streams[0], "/simplequeue.QueueService/ConsumeMessage", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &queueServiceConsumeMessageClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -473,16 +583,16 @@ func (c *queueServiceClient) SubQueue(ctx context.Context, in *SubQueueRequest, 
 	return x, nil
 }
 
-type QueueService_SubQueueClient interface {
+type QueueService_ConsumeMessageClient interface {
 	Recv() (*QueueMsg, error)
 	grpc.ClientStream
 }
 
-type queueServiceSubQueueClient struct {
+type queueServiceConsumeMessageClient struct {
 	grpc.ClientStream
 }
 
-func (x *queueServiceSubQueueClient) Recv() (*QueueMsg, error) {
+func (x *queueServiceConsumeMessageClient) Recv() (*QueueMsg, error) {
 	m := new(QueueMsg)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -493,7 +603,8 @@ func (x *queueServiceSubQueueClient) Recv() (*QueueMsg, error) {
 // QueueServiceServer is the server API for QueueService service.
 type QueueServiceServer interface {
 	PubMessage(context.Context, *PubMessageRequest) (*PubMessageResponse, error)
-	SubQueue(*SubQueueRequest, QueueService_SubQueueServer) error
+	SubEvent(context.Context, *SubEventRequest) (*SubEventResponse, error)
+	ConsumeMessage(*ConsumeMessageRequest, QueueService_ConsumeMessageServer) error
 }
 
 // UnimplementedQueueServiceServer can be embedded to have forward compatible implementations.
@@ -503,8 +614,11 @@ type UnimplementedQueueServiceServer struct {
 func (*UnimplementedQueueServiceServer) PubMessage(ctx context.Context, req *PubMessageRequest) (*PubMessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PubMessage not implemented")
 }
-func (*UnimplementedQueueServiceServer) SubQueue(req *SubQueueRequest, srv QueueService_SubQueueServer) error {
-	return status.Errorf(codes.Unimplemented, "method SubQueue not implemented")
+func (*UnimplementedQueueServiceServer) SubEvent(ctx context.Context, req *SubEventRequest) (*SubEventResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SubEvent not implemented")
+}
+func (*UnimplementedQueueServiceServer) ConsumeMessage(req *ConsumeMessageRequest, srv QueueService_ConsumeMessageServer) error {
+	return status.Errorf(codes.Unimplemented, "method ConsumeMessage not implemented")
 }
 
 func RegisterQueueServiceServer(s *grpc.Server, srv QueueServiceServer) {
@@ -529,24 +643,42 @@ func _QueueService_PubMessage_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _QueueService_SubQueue_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(SubQueueRequest)
+func _QueueService_SubEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SubEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueueServiceServer).SubEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/simplequeue.QueueService/SubEvent",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueueServiceServer).SubEvent(ctx, req.(*SubEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _QueueService_ConsumeMessage_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ConsumeMessageRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(QueueServiceServer).SubQueue(m, &queueServiceSubQueueServer{stream})
+	return srv.(QueueServiceServer).ConsumeMessage(m, &queueServiceConsumeMessageServer{stream})
 }
 
-type QueueService_SubQueueServer interface {
+type QueueService_ConsumeMessageServer interface {
 	Send(*QueueMsg) error
 	grpc.ServerStream
 }
 
-type queueServiceSubQueueServer struct {
+type queueServiceConsumeMessageServer struct {
 	grpc.ServerStream
 }
 
-func (x *queueServiceSubQueueServer) Send(m *QueueMsg) error {
+func (x *queueServiceConsumeMessageServer) Send(m *QueueMsg) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -558,11 +690,15 @@ var _QueueService_serviceDesc = grpc.ServiceDesc{
 			MethodName: "PubMessage",
 			Handler:    _QueueService_PubMessage_Handler,
 		},
+		{
+			MethodName: "SubEvent",
+			Handler:    _QueueService_SubEvent_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "SubQueue",
-			Handler:       _QueueService_SubQueue_Handler,
+			StreamName:    "ConsumeMessage",
+			Handler:       _QueueService_ConsumeMessage_Handler,
 			ServerStreams: true,
 		},
 	},
@@ -669,7 +805,7 @@ func (m *PubMessageResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *SubQueueRequest) Marshal() (dAtA []byte, err error) {
+func (m *SubEventRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -679,12 +815,12 @@ func (m *SubQueueRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *SubQueueRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *SubEventRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *SubQueueRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *SubEventRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -702,6 +838,74 @@ func (m *SubQueueRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			i -= size
 			i = encodeVarintSimplequeue(dAtA, i, uint64(size))
 		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *SubEventResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *SubEventResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *SubEventResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.ClientId) > 0 {
+		i -= len(m.ClientId)
+		copy(dAtA[i:], m.ClientId)
+		i = encodeVarintSimplequeue(dAtA, i, uint64(len(m.ClientId)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *ConsumeMessageRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ConsumeMessageRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ConsumeMessageRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.ClientId) > 0 {
+		i -= len(m.ClientId)
+		copy(dAtA[i:], m.ClientId)
+		i = encodeVarintSimplequeue(dAtA, i, uint64(len(m.ClientId)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -896,7 +1100,7 @@ func (m *PubMessageResponse) Size() (n int) {
 	return n
 }
 
-func (m *SubQueueRequest) Size() (n int) {
+func (m *SubEventRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -904,6 +1108,38 @@ func (m *SubQueueRequest) Size() (n int) {
 	_ = l
 	if m.Sub != nil {
 		l = m.Sub.Size()
+		n += 1 + l + sovSimplequeue(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *SubEventResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ClientId)
+	if l > 0 {
+		n += 1 + l + sovSimplequeue(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *ConsumeMessageRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ClientId)
+	if l > 0 {
 		n += 1 + l + sovSimplequeue(uint64(l))
 	}
 	if m.XXX_unrecognized != nil {
@@ -1214,7 +1450,7 @@ func (m *PubMessageResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *SubQueueRequest) Unmarshal(dAtA []byte) error {
+func (m *SubEventRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1237,10 +1473,10 @@ func (m *SubQueueRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: SubQueueRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: SubEventRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: SubQueueRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: SubEventRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1278,6 +1514,178 @@ func (m *SubQueueRequest) Unmarshal(dAtA []byte) error {
 			if err := m.Sub.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipSimplequeue(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthSimplequeue
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthSimplequeue
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *SubEventResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowSimplequeue
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: SubEventResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: SubEventResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ClientId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowSimplequeue
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthSimplequeue
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthSimplequeue
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ClientId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipSimplequeue(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthSimplequeue
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthSimplequeue
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ConsumeMessageRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowSimplequeue
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ConsumeMessageRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ConsumeMessageRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ClientId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowSimplequeue
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthSimplequeue
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthSimplequeue
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ClientId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

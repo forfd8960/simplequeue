@@ -5,6 +5,7 @@ type Client struct {
 	qs           *QueueServer
 	ClientID     string
 	Hostname     string
+	Channel      *Channel
 	SubEventChan chan *Channel
 }
 

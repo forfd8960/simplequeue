@@ -6,7 +6,8 @@ option go_package = "pb";
 
 service QueueService {
     rpc PubMessage(PubMessageRequest) returns (PubMessageResponse) {}
-    rpc SubQueue(SubQueueRequest) returns (stream QueueMsg) {}
+    rpc SubEvent(SubEventRequest) returns (SubEventResponse) {}
+    rpc ConsumeMessage(ConsumeMessageRequest) returns (stream QueueMsg) {}
 }
 
 message Identify { string magic = 1; }
@@ -17,8 +18,16 @@ message PubMessageRequest {
 
 message PubMessageResponse {}
 
-message SubQueueRequest {
+message SubEventRequest {
   Sub sub = 1;
+}
+
+message SubEventResponse {
+  string client_id = 1;
+}
+
+message ConsumeMessageRequest {
+  string client_id = 1;
 }
 
 message Pub {

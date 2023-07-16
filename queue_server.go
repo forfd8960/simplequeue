@@ -5,7 +5,6 @@ import (
 	"log"
 	"net"
 	"sync"
-	"time"
 
 	"github.com/forfd8960/simplequeue/pb"
 	"google.golang.org/grpc/codes"
@@ -83,25 +82,24 @@ func (qs *QueueServer) PubMessage(ctx context.Context, req *pb.PubMessageRequest
 	return &pb.PubMessageResponse{}, nil
 }
 
-func (qs *QueueServer) SubQueue(req *pb.SubQueueRequest, srv pb.QueueService_SubQueueServer) error {
+func (qs *QueueServer) SubEvent(ctx context.Context, req *pb.SubEventRequest) (*pb.SubEventResponse, error) {
 	if req == nil || req.Sub == nil {
-		return errInvalidArgument("invalid sub request: %v", req)
+		return nil, errInvalidArgument("invalid sub request: %v", req)
 	}
 
 	topic := req.Sub.Topic
 	if topic == "" {
-		return errInvalidArgument("empty topic")
+		return nil, errInvalidArgument("empty topic")
 	}
 
 	channel := req.Sub.Channel
 	if channel == "" {
-		return errInvalidArgument("empty channel")
+		return nil, errInvalidArgument("empty channel")
 	}
 
-	srv.Send(&pb.QueueMsg{
-		Id:        "1",
-		Body:      "Hello",
-		Timestamp: time.Now().Unix(),
-	})
+	return &pb.SubEventResponse{}, nil
+}
+
+func (qs *QueueServer) ConsumeMessage(req *pb.ConsumeMessageRequest, srv pb.QueueService_ConsumeMessageServer) error {
 	return nil
 }
