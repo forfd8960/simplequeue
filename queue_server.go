@@ -115,13 +115,17 @@ func (qs *QueueServer) SubEvent(ctx context.Context, req *pb.SubEventRequest) (*
 		return nil, err
 	}
 
-	qs.mu.Lock()
-	qs.clients[clientID] = client
-	qs.mu.Unlock()
+	qs.addClient(client)
 
 	return &pb.SubEventResponse{
 		ClientId: fmt.Sprintf("%d", clientID),
 	}, nil
+}
+
+func (qs *QueueServer) addClient(cli *Client) {
+	qs.mu.Lock()
+	qs.clients[cli.ID] = cli
+	qs.mu.Unlock()
 }
 
 func (qs *QueueServer) ConsumeMessage(req *pb.ConsumeMessageRequest, srv pb.QueueService_ConsumeMessageServer) error {
