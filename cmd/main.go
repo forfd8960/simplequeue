@@ -22,7 +22,7 @@ func main() {
 
 	queueServer, err := simplequeue.NewQueueServer(&simplequeue.Options{})
 	if err != nil {
-		log.Printf("Init server err: %n", err)
+		log.Printf("Init server err: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -30,7 +30,7 @@ func main() {
 
 	log.Println("-----------Start queueServer On 8080---------")
 	if err = s.Serve(lis); err != nil {
-		log.Printf("serve error: %v\n", err)
+		log.Printf("serve err: %v\n", err)
 		os.Exit(1)
 	}
 }
