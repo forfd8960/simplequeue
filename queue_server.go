@@ -22,10 +22,13 @@ var (
 	}
 )
 
+type ClientID = int64
+
 type QueueServer struct {
 	mu          sync.RWMutex
 	clientIDSeq int64
 	topicMap    map[string]*Topic
+	clients     map[ClientID]*Client
 	tcpListener net.Listener
 	connHandler *connHandler
 	wg          *waitGroup
@@ -105,9 +108,16 @@ func (qs *QueueServer) SubEvent(ctx context.Context, req *pb.SubEventRequest) (*
 
 	clientID := atomic.AddInt64(&qs.clientIDSeq, 1)
 	client := NewClient(clientID, qs)
+	client.Channel = ch
+	client.SubEventChan <- ch
+
 	if err := ch.AddClient(clientID, client); err != nil {
 		return nil, err
 	}
+
+	qs.mu.Lock()
+	qs.clients[clientID] = client
+	qs.mu.Unlock()
 
 	return &pb.SubEventResponse{
 		ClientId: fmt.Sprintf("%d", clientID),
