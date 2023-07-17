@@ -45,6 +45,17 @@ func (t *Topic) GetChannel(chanName string) *Channel {
 	return channel
 }
 
+func (t *Topic) PutMessage(msg *pb.QueueMsg) error {
+	select {
+	case t.MemoryMsgChan <- msg:
+		return nil
+	default: // todo: write msg to filestorage
+		log.Println("memoryMsgChan is full")
+	}
+
+	return nil
+}
+
 func (t *Topic) getOrCreateChannel(chanName string) (*Channel, bool) {
 	ch, ok := t.ChannelMap[chanName]
 	if ok {

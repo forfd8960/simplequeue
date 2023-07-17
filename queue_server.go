@@ -8,9 +8,11 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/forfd8960/simplequeue/pb"
+	"github.com/rs/xid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/forfd8960/simplequeue/pb"
 )
 
 var (
@@ -31,7 +33,7 @@ type QueueServer struct {
 	clients     map[ClientID]*Client
 	tcpListener net.Listener
 	connHandler *connHandler
-	wg          *waitGroup
+	wg          waitGroup
 }
 
 type Options struct {
@@ -54,24 +56,6 @@ func NewQueueServer(opts *Options) (*QueueServer, error) {
 	return qs, nil
 }
 
-func (qs *QueueServer) Main() error {
-	exitCh := make(chan error)
-	var once sync.Once
-
-	exitFunc := func(err error) {
-		once.Do(func() {
-			exitCh <- err
-		})
-	}
-
-	qs.wg.Wrap(func() {
-		exitFunc(runServer(qs.tcpListener, qs.connHandler))
-	})
-
-	err := <-exitCh
-	return err
-}
-
 func (qs *QueueServer) PubMessage(ctx context.Context, req *pb.PubMessageRequest) (*pb.PubMessageResponse, error) {
 	if req == nil || req.Pub == nil {
 		return nil, errInvalidPubRequest(req)
@@ -83,8 +67,16 @@ func (qs *QueueServer) PubMessage(ctx context.Context, req *pb.PubMessageRequest
 	if len(req.Pub.Msg) == 0 {
 		return nil, errInvalidArgument("empty message")
 	}
-
 	log.Printf("[QueueServer] Incoming req: %+v\n", req)
+
+	topic := qs.GetTopic(req.Pub.Topic)
+	msgID := xid.New().String()
+	msg := NewMessage(msgID, string(req.Pub.Msg))
+	if err := topic.PutMessage(msg); err != nil {
+		return nil, err
+	}
+
+	log.Printf("[QueueServer] Success Put Msg: %+v, to: %v\n", msg, *topic)
 	return &pb.PubMessageResponse{}, nil
 }
 
