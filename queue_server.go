@@ -2,9 +2,7 @@ package simplequeue
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"net"
 	"sync"
 	"sync/atomic"
 
@@ -13,6 +11,11 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/forfd8960/simplequeue/pb"
+)
+
+const (
+	defaultTopicSize  = 100
+	defaultClientSize = 100
 )
 
 var (
@@ -30,9 +33,8 @@ type QueueServer struct {
 	mu          sync.RWMutex
 	clientIDSeq int64
 	topicMap    map[string]*Topic
+	topicsChan  chan *Topic
 	clients     map[ClientID]*Client
-	tcpListener net.Listener
-	connHandler *connHandler
 	wg          waitGroup
 }
 
@@ -42,17 +44,11 @@ type Options struct {
 
 // NewQueueServer ...
 func NewQueueServer(opts *Options) (*QueueServer, error) {
-	qs := &QueueServer{}
-	qs.connHandler = &connHandler{
-		qs: qs,
+	qs := &QueueServer{
+		topicMap:   make(map[string]*Topic, defaultTopicSize),
+		clients:    make(map[int64]*Client, defaultClientSize),
+		topicsChan: make(chan *Topic, defaultTopicSize),
 	}
-
-	var err error
-	qs.tcpListener, err = net.Listen("tcp", opts.TCPAddress)
-	if err != nil {
-		return nil, err
-	}
-
 	return qs, nil
 }
 
@@ -76,7 +72,7 @@ func (qs *QueueServer) PubMessage(ctx context.Context, req *pb.PubMessageRequest
 		return nil, err
 	}
 
-	log.Printf("[QueueServer] Success Put Msg: %+v, to: %v\n", msg, *topic)
+	log.Printf("[QueueServer] Success Put Msg: %+v, to: %v\n", msg, topic.Name)
 	return &pb.PubMessageResponse{}, nil
 }
 
@@ -110,7 +106,7 @@ func (qs *QueueServer) SubEvent(ctx context.Context, req *pb.SubEventRequest) (*
 	qs.addClient(client)
 
 	return &pb.SubEventResponse{
-		ClientId: fmt.Sprintf("%d", clientID),
+		ClientId: clientID,
 	}, nil
 }
 
@@ -121,9 +117,22 @@ func (qs *QueueServer) addClient(cli *Client) {
 }
 
 func (qs *QueueServer) ConsumeMessage(req *pb.ConsumeMessageRequest, srv pb.QueueService_ConsumeMessageServer) error {
-	if req == nil || req.ClientId == "" {
+	if req == nil || req.ClientId == 0 {
 		return errInvalidArgument("invalid request/clientID: %v", req)
 	}
+
+	qs.mu.RLock()
+	cli, ok := qs.clients[req.ClientId]
+	qs.mu.RUnlock()
+
+	if !ok || cli == nil {
+		return errInvalidArgument("client not found, clientID: %d", req.ClientId)
+	}
+
+	if err := qs.messagePump(cli, srv.Send); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -144,6 +153,12 @@ func (qs *QueueServer) GetTopic(topicName string) *Topic {
 	t = NewTopic(topicName, qs)
 	qs.topicMap[topicName] = t
 	qs.mu.Unlock()
+
+	select {
+	case qs.topicsChan <- t:
+	default:
+		log.Println("topicChan is full")
+	}
 
 	return t
 }

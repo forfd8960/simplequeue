@@ -23,11 +23,11 @@ message SubEventRequest {
 }
 
 message SubEventResponse {
-  string client_id = 1;
+  int64 client_id = 1;
 }
 
 message ConsumeMessageRequest {
-  string client_id = 1;
+  int64 client_id = 1;
 }
 
 message Pub {

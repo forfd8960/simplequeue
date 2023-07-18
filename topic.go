@@ -17,8 +17,6 @@ type Topic struct {
 	Name          string
 	ChannelMap    map[string]*Channel
 	MemoryMsgChan chan *pb.QueueMsg
-
-	wg waitGroup
 }
 
 func NewTopic(topicName string, qs *QueueServer) *Topic {
@@ -29,7 +27,6 @@ func NewTopic(topicName string, qs *QueueServer) *Topic {
 		MemoryMsgChan: make(chan *pb.QueueMsg, defaultMemQueueSize), //todo: read mem queue size from qs
 	}
 
-	t.wg.Wrap(t.messagePump)
 	return t
 }
 

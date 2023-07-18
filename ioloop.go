@@ -1,6 +1,10 @@
 package simplequeue
 
-// IOLoop is forward message from producer to consumer
+import "github.com/forfd8960/simplequeue/pb"
+
+type sendMessageFN func(*pb.QueueMsg) error
+
+// topicMessagePump is forward message from producer to consumer
 /*
 
 1. Producer Pub Message to a Topic through QueueServer: RPC PubMessage
@@ -11,10 +15,39 @@ package simplequeue
 
 4. QueueServer get msg from client.SubEventChan.MemoryMsgChan, and send it to client through grpc stream Send.
 */
-func (qs *QueueServer) IOLoop() error {
-	return nil
+func (qs *QueueServer) topicMessagePump() {
+	var topic *Topic
+	for {
+		select {
+		case topic = <-qs.topicsChan:
+		default:
+			continue
+		}
+
+		qs.wg.Wrap(topic.messagePump)
+	}
 }
 
-func (qs *QueueServer) messagePump() {
+func (qs *QueueServer) messagePump(cli *Client, sendMsg sendMessageFN) error {
+	var subEventChan *Channel
+	var msg *pb.QueueMsg
+	for {
+		select {
+		case subEventChan = <-cli.SubEventChan:
+		default:
+			continue
+		}
 
+		select {
+		case msg = <-subEventChan.MemoryMsgChan:
+		default:
+			continue
+		}
+
+		if msg != nil {
+			if err := sendMsg(msg); err != nil {
+				return err
+			}
+		}
+	}
 }
