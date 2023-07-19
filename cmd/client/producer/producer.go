@@ -40,10 +40,10 @@ func main() {
 		},
 	})
 	if err != nil {
-		log.Printf("[BSayHello] SayHello error: %v\n", err)
+		log.Printf("[Producer] PubMessage error: %v\n", err)
 		os.Exit(1)
 	}
 
-	log.Printf("[BSayHello] SayHello: %v\n", resp)
+	log.Printf("[Producer] PubMessage: %v\n", resp)
 
 }
