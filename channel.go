@@ -24,7 +24,8 @@ func NewChannel(topicName, chName string, qs *QueueServer) *Channel {
 		qs:            qs,
 		TopicName:     topicName,
 		Name:          chName,
-		MemoryMsgChan: make(chan *pb.QueueMsg, 1),
+		MemoryMsgChan: make(chan *pb.QueueMsg, 100),
+		clients:       make(map[int64]*Client, defaultClientCount),
 	}
 }
 
@@ -46,6 +47,7 @@ func (ch *Channel) AddClient(cliID int64, cli *Client) error {
 }
 
 func (ch *Channel) PutMessage(msg *pb.QueueMsg) error {
+	log.Println("put msg to channel: ", msg, ch)
 	select {
 	case ch.MemoryMsgChan <- msg:
 	default:

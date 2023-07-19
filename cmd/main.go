@@ -20,7 +20,10 @@ func main() {
 
 	s := grpc.NewServer()
 
-	queueServer, err := simplequeue.NewQueueServer(&simplequeue.Options{})
+	queueServer, err := simplequeue.NewQueueServer(&simplequeue.Options{
+		TopicChanSize: 100,
+		ClientCount:   1000,
+	})
 	if err != nil {
 		log.Printf("Init server err: %v\n", err)
 		os.Exit(1)

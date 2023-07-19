@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	queueServerAddrs := flag.String("queue-addrs", "localhost:8090", "the queue server address")
+	queueServerAddrs := flag.String("queue-addrs", "localhost:8080", "the queue server address")
 	flag.Parse()
 
 	log.Println("Pub message to queue server: ", *queueServerAddrs)

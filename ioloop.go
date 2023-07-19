@@ -1,6 +1,11 @@
 package simplequeue
 
-import "github.com/forfd8960/simplequeue/pb"
+import (
+	"fmt"
+	"log"
+
+	"github.com/forfd8960/simplequeue/pb"
+)
 
 type sendMessageFN func(*pb.QueueMsg) error
 
@@ -16,6 +21,7 @@ type sendMessageFN func(*pb.QueueMsg) error
 4. QueueServer get msg from client.SubEventChan.MemoryMsgChan, and send it to client through grpc stream Send.
 */
 func (qs *QueueServer) topicMessagePump() {
+	log.Println("--------Starting Topic Message Pump---------")
 	var topic *Topic
 	for {
 		select {
@@ -29,22 +35,34 @@ func (qs *QueueServer) topicMessagePump() {
 }
 
 func (qs *QueueServer) messagePump(cli *Client, sendMsg sendMessageFN) error {
-	var subEventChan *Channel
+	println("--------Starting Client Message Pump--------")
+
+	log.Printf("cli channel: %v\n", cli.SubEventChan)
+	log.Printf("cli channel msg length: %d\n", len(cli.Channel.MemoryMsgChan))
+
+	// var subEventChan *Channel
 	var msg *pb.QueueMsg
+
+	channel := cli.Channel
+	if channel == nil {
+		return fmt.Errorf("empty channel")
+	}
+
 	for {
-		select {
-		case subEventChan = <-cli.SubEventChan:
-		default:
-			continue
-		}
+		// select {
+		// case subEventChan = <-cli.SubEventChan:
+		// default:
+		// 	continue
+		// }
 
 		select {
-		case msg = <-subEventChan.MemoryMsgChan:
+		case msg = <-channel.MemoryMsgChan:
 		default:
 			continue
 		}
 
 		if msg != nil {
+			log.Println("Send Msg: ", msg)
 			if err := sendMsg(msg); err != nil {
 				return err
 			}

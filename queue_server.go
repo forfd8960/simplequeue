@@ -78,8 +78,12 @@ func (qs *QueueServer) PubMessage(ctx context.Context, req *pb.PubMessageRequest
 	log.Printf("[QueueServer] Incoming req: %+v\n", req)
 
 	topic := qs.GetTopic(req.Pub.Topic)
+	log.Printf("[QueueServer] get topic: %+v\n", topic)
+
 	msgID := xid.New().String()
 	msg := NewMessage(msgID, string(req.Pub.Msg))
+
+	log.Printf("[QueueServer] new message: %+v\n", msg)
 	if err := topic.PutMessage(msg); err != nil {
 		return nil, err
 	}
@@ -115,6 +119,7 @@ func (qs *QueueServer) SubEvent(ctx context.Context, req *pb.SubEventRequest) (*
 		return nil, err
 	}
 
+	log.Println("add client to queue server: ", *client)
 	qs.addClient(client)
 
 	return &pb.SubEventResponse{
@@ -140,6 +145,10 @@ func (qs *QueueServer) ConsumeMessage(req *pb.ConsumeMessageRequest, srv pb.Queu
 	if !ok || cli == nil {
 		return errInvalidArgument("client not found, clientID: %d", req.ClientId)
 	}
+
+	println("found client: ", cli.ID)
+	println("found client Channel: ", cli.Channel.Name)
+	println("found client Channel Topic: ", cli.Channel.TopicName)
 
 	if err := qs.messagePump(cli, srv.Send); err != nil {
 		return err

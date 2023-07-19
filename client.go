@@ -14,6 +14,6 @@ func NewClient(id int64, qs *QueueServer) *Client {
 	return &Client{
 		ID:           id,
 		qs:           qs,
-		SubEventChan: make(chan *Channel, 1),
+		SubEventChan: make(chan *Channel, 100),
 	}
 }

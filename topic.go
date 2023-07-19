@@ -78,10 +78,11 @@ func (t *Topic) messagePump() {
 		select {
 		case msg = <-t.MemoryMsgChan:
 		default:
-			log.Println("no msg in channel")
 			continue
 		}
 
+		log.Println("put msg to channels: ", msg)
+		log.Println("length of channel: ", len(chans))
 		for i, ch := range chans {
 			chanMsg := msg
 			if i > 0 {
