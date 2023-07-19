@@ -49,6 +49,7 @@ func NewQueueServer(opts *Options) (*QueueServer, error) {
 		clients:    make(map[int64]*Client, defaultClientSize),
 		topicsChan: make(chan *Topic, defaultTopicSize),
 	}
+	qs.wg.Wrap(qs.topicMessagePump)
 	return qs, nil
 }
 
