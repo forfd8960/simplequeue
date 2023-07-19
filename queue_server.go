@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	defaultTopicSize  = 100
-	defaultClientSize = 100
+	defaultTopicSize   = 100
+	defaultClientCount = 100
 )
 
 var (
@@ -39,15 +39,26 @@ type QueueServer struct {
 }
 
 type Options struct {
-	TCPAddress string `flag:"tcp-addr"`
+	TopicChanSize int64 `flag:"topic-chan-size"`
+	ClientCount   int64 `flag:"client-count"`
 }
 
 // NewQueueServer ...
 func NewQueueServer(opts *Options) (*QueueServer, error) {
+	topicChanSize := opts.TopicChanSize
+	if topicChanSize < defaultTopicSize {
+		topicChanSize = defaultTopicSize
+	}
+
+	clientCount := opts.ClientCount
+	if clientCount < defaultClientCount {
+		clientCount = defaultClientCount
+	}
+
 	qs := &QueueServer{
-		topicMap:   make(map[string]*Topic, defaultTopicSize),
-		clients:    make(map[int64]*Client, defaultClientSize),
-		topicsChan: make(chan *Topic, defaultTopicSize),
+		topicMap:   make(map[string]*Topic, topicChanSize),
+		clients:    make(map[int64]*Client, clientCount),
+		topicsChan: make(chan *Topic, topicChanSize),
 	}
 	qs.wg.Wrap(qs.topicMessagePump)
 	return qs, nil
