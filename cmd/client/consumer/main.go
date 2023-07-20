@@ -36,26 +36,18 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	resp, err := client.SubEvent(ctx, &pb.SubEventRequest{
+	stream, err := client.ConsumeMessage(ctx, &pb.ConsumeMessageRequest{
 		Sub: &pb.Sub{
 			Topic:   *topic,
 			Channel: *channel,
 		},
 	})
 	if err != nil {
-		log.Printf("[Consumer] SubEvent error: %v\n", err)
-		os.Exit(1)
-	}
-
-	log.Printf("[Consumer] SubEvent ClientID: %d\n", resp.ClientId)
-
-	stream, err := client.ConsumeMessage(ctx, &pb.ConsumeMessageRequest{
-		ClientId: resp.ClientId,
-	})
-	if err != nil {
 		log.Printf("[Consumer] ConsumeMessage err: %v\n", err)
 		os.Exit(1)
 	}
+
+	log.Printf("[Consumer] Successfully sub to: %s\n", *topic)
 
 	for {
 		msg, err := stream.Recv()

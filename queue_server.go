@@ -35,7 +35,6 @@ type QueueServer struct {
 	mu         sync.RWMutex
 	topicMap   map[string]*Topic
 	topicsChan chan *Topic
-	clients    map[ClientID]*Client
 	exitChan   chan struct{}
 	wg         waitGroup
 }
@@ -59,7 +58,6 @@ func NewQueueServer(opts *Options) (*QueueServer, error) {
 
 	qs := &QueueServer{
 		topicMap:   make(map[string]*Topic, topicChanSize),
-		clients:    make(map[int64]*Client, clientCount),
 		topicsChan: make(chan *Topic, topicChanSize),
 		exitChan:   make(chan struct{}, 1),
 	}
@@ -95,73 +93,36 @@ func (qs *QueueServer) PubMessage(ctx context.Context, req *pb.PubMessageRequest
 	return &pb.PubMessageResponse{}, nil
 }
 
-func (qs *QueueServer) SubEvent(ctx context.Context, req *pb.SubEventRequest) (*pb.SubEventResponse, error) {
+func (qs *QueueServer) ConsumeMessage(req *pb.ConsumeMessageRequest, srv pb.QueueService_ConsumeMessageServer) error {
 	if req == nil || req.Sub == nil {
-		return nil, errInvalidArgument("invalid sub request: %v", req)
+		return errInvalidArgument("invalid request: %v", req)
 	}
 
 	topic := req.Sub.Topic
 	if topic == "" {
-		return nil, errInvalidArgument("empty topic")
+		return errInvalidArgument("empty topic")
 	}
 
 	channel := req.Sub.Channel
 	if channel == "" {
-		return nil, errInvalidArgument("empty channel")
+		return errInvalidArgument("empty channel")
 	}
 
 	t := qs.GetTopic(topic)
+	log.Printf("Sub to Topic: %s\n", t.Name)
+
 	ch := t.GetChannel(channel)
+	log.Printf("Sub to Channel: %s\n", ch.Name)
 
 	clientID := atomic.AddInt64(&qs.clientIDSeq, 1)
 	client := NewClient(clientID)
 	client.Channel = ch
 
-	if err := ch.AddClient(clientID, client); err != nil {
-		return nil, err
-	}
-
-	log.Println("adding client to queue server: ", client.ID)
-	qs.addClient(client)
-	log.Println("done add client to queue server: ", client.ID)
-
-	return &pb.SubEventResponse{
-		ClientId: clientID,
-	}, nil
-}
-
-func (qs *QueueServer) addClient(cli *Client) {
-	qs.mu.Lock()
-	qs.clients[cli.ID] = cli
-	qs.mu.Unlock()
-}
-
-func (qs *QueueServer) ConsumeMessage(req *pb.ConsumeMessageRequest, srv pb.QueueService_ConsumeMessageServer) error {
-	if req == nil || req.ClientId == 0 {
-		return errInvalidArgument("invalid request/clientID: %v", req)
-	}
-
-	cli, err := qs.getClient(req.ClientId)
-	if err != nil {
-		return err
-	}
-
-	if err := qs.messagePump(cli, srv.Send); err != nil {
+	if err := qs.messagePump(client, srv.Send); err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func (qs *QueueServer) getClient(cliID int64) (*Client, error) {
-	qs.mu.RLock()
-	defer qs.mu.RUnlock()
-	cli, ok := qs.clients[cliID]
-	if !ok || cli == nil {
-		return nil, errInvalidArgument("client not found, clientID: %d", cliID)
-	}
-
-	return cli, nil
 }
 
 func (qs *QueueServer) GetTopic(topicName string) *Topic {
@@ -180,13 +141,13 @@ func (qs *QueueServer) GetTopic(topicName string) *Topic {
 
 	t = NewTopic(topicName, qs)
 	qs.topicMap[topicName] = t
-	qs.mu.Unlock()
 
 	select {
 	case qs.topicsChan <- t:
 	default:
 		log.Println("topicChan is full")
 	}
+	qs.mu.Unlock()
 
 	return t
 }
