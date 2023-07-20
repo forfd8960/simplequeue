@@ -30,12 +30,14 @@ var (
 type ClientID = int64
 
 type QueueServer struct {
-	mu          sync.RWMutex
 	clientIDSeq int64
-	topicMap    map[string]*Topic
-	topicsChan  chan *Topic
-	clients     map[ClientID]*Client
-	wg          waitGroup
+
+	mu         sync.RWMutex
+	topicMap   map[string]*Topic
+	topicsChan chan *Topic
+	clients    map[ClientID]*Client
+	exitChan   chan struct{}
+	wg         waitGroup
 }
 
 type Options struct {
@@ -59,6 +61,7 @@ func NewQueueServer(opts *Options) (*QueueServer, error) {
 		topicMap:   make(map[string]*Topic, topicChanSize),
 		clients:    make(map[int64]*Client, clientCount),
 		topicsChan: make(chan *Topic, topicChanSize),
+		exitChan:   make(chan struct{}, 1),
 	}
 	qs.wg.Wrap(qs.topicMessagePump)
 	return qs, nil
@@ -78,7 +81,7 @@ func (qs *QueueServer) PubMessage(ctx context.Context, req *pb.PubMessageRequest
 	log.Printf("[QueueServer] Incoming req: %+v\n", req)
 
 	topic := qs.GetTopic(req.Pub.Topic)
-	log.Printf("[QueueServer] get topic: %+v\n", topic)
+	log.Printf("[QueueServer] get topic: %s\n", topic.Name)
 
 	msgID := xid.New().String()
 	msg := NewMessage(msgID, string(req.Pub.Msg))
@@ -88,7 +91,7 @@ func (qs *QueueServer) PubMessage(ctx context.Context, req *pb.PubMessageRequest
 		return nil, err
 	}
 
-	log.Printf("[QueueServer] Success Put Msg: %+v, to: %v\n", msg, topic.Name)
+	log.Printf("[QueueServer] Success Put Msg: %+v, to: %s\n", msg, topic.Name)
 	return &pb.PubMessageResponse{}, nil
 }
 
@@ -111,16 +114,16 @@ func (qs *QueueServer) SubEvent(ctx context.Context, req *pb.SubEventRequest) (*
 	ch := t.GetChannel(channel)
 
 	clientID := atomic.AddInt64(&qs.clientIDSeq, 1)
-	client := NewClient(clientID, qs)
+	client := NewClient(clientID)
 	client.Channel = ch
-	client.SubEventChan <- ch
 
 	if err := ch.AddClient(clientID, client); err != nil {
 		return nil, err
 	}
 
-	log.Println("add client to queue server: ", *client)
+	log.Println("adding client to queue server: ", client.ID)
 	qs.addClient(client)
+	log.Println("done add client to queue server: ", client.ID)
 
 	return &pb.SubEventResponse{
 		ClientId: clientID,
@@ -138,23 +141,27 @@ func (qs *QueueServer) ConsumeMessage(req *pb.ConsumeMessageRequest, srv pb.Queu
 		return errInvalidArgument("invalid request/clientID: %v", req)
 	}
 
-	qs.mu.RLock()
-	cli, ok := qs.clients[req.ClientId]
-	qs.mu.RUnlock()
-
-	if !ok || cli == nil {
-		return errInvalidArgument("client not found, clientID: %d", req.ClientId)
+	cli, err := qs.getClient(req.ClientId)
+	if err != nil {
+		return err
 	}
-
-	println("found client: ", cli.ID)
-	println("found client Channel: ", cli.Channel.Name)
-	println("found client Channel Topic: ", cli.Channel.TopicName)
 
 	if err := qs.messagePump(cli, srv.Send); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (qs *QueueServer) getClient(cliID int64) (*Client, error) {
+	qs.mu.RLock()
+	defer qs.mu.RUnlock()
+	cli, ok := qs.clients[cliID]
+	if !ok || cli == nil {
+		return nil, errInvalidArgument("client not found, clientID: %d", cliID)
+	}
+
+	return cli, nil
 }
 
 func (qs *QueueServer) GetTopic(topicName string) *Topic {

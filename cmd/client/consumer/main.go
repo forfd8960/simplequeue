@@ -16,6 +16,8 @@ import (
 
 func main() {
 	queueServerAddrs := flag.String("queue-addrs", "localhost:8080", "the queue server address")
+	topic := flag.String("topic", "hello-topic", "the topic name")
+	channel := flag.String("channel", "msg-chan1", "the channel name")
 	flag.Parse()
 
 	log.Println("Sub Event to queue server: ", *queueServerAddrs)
@@ -36,8 +38,8 @@ func main() {
 
 	resp, err := client.SubEvent(ctx, &pb.SubEventRequest{
 		Sub: &pb.Sub{
-			Topic:   "hello-topic",
-			Channel: "msg-chan1",
+			Topic:   *topic,
+			Channel: *channel,
 		},
 	})
 	if err != nil {

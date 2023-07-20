@@ -15,6 +15,7 @@ import (
 
 func main() {
 	queueServerAddrs := flag.String("queue-addrs", "localhost:8080", "the queue server address")
+	topic := flag.String("topic", "hello-topic", "the topic name")
 	flag.Parse()
 
 	log.Println("Pub message to queue server: ", *queueServerAddrs)
@@ -35,7 +36,7 @@ func main() {
 
 	resp, err := client.PubMessage(ctx, &pb.PubMessageRequest{
 		Pub: &pb.Pub{
-			Topic: "hello-topic",
+			Topic: *topic,
 			Msg:   []byte(`Hello Hello Hello - How are you`),
 		},
 	})

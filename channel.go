@@ -33,21 +33,19 @@ func NewChannel(topicName, chName string, qs *QueueServer) *Channel {
 //
 // todo: refactor cli to be interface
 func (ch *Channel) AddClient(cliID int64, cli *Client) error {
-	ch.mu.RLock()
+	ch.mu.Lock()
+	defer ch.mu.Unlock()
 	_, ok := ch.clients[cliID]
-	ch.mu.RUnlock()
 	if ok {
 		return nil
 	}
 
-	ch.mu.Lock()
 	ch.clients[cliID] = cli
-	ch.mu.Unlock()
 	return nil
 }
 
 func (ch *Channel) PutMessage(msg *pb.QueueMsg) error {
-	log.Println("put msg to channel: ", msg, ch)
+	log.Println("put msg to channel: ", msg, ch.Name)
 	select {
 	case ch.MemoryMsgChan <- msg:
 	default:

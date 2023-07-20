@@ -1,19 +1,19 @@
 package simplequeue
 
 type Client struct {
-	ID           int64
-	qs           *QueueServer
-	ClientID     string
-	Hostname     string
-	Channel      *Channel
-	SubEventChan chan *Channel
+	// qs *QueueServer
+
+	ID       int64
+	Hostname string
+	Channel  *Channel
+	// SubEventChan chan *Channel
 }
 
 // NewClient ...
-func NewClient(id int64, qs *QueueServer) *Client {
+func NewClient(id int64) *Client {
 	return &Client{
-		ID:           id,
-		qs:           qs,
-		SubEventChan: make(chan *Channel, 100),
+		ID: id,
+		// qs: qs,
+		// SubEventChan: make(chan *Channel, 100),
 	}
 }
